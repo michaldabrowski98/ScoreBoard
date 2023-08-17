@@ -1,0 +1,19 @@
+{
+    "name": "mdabrowski/score-board",
+    "description": "Football World Cup Score Board library",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Mdabrowski\\ScoreBoard\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "michaldabrowski98",
+            "email": "mdboxman@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^9"
+    }
+}
