@@ -51,10 +51,8 @@ class ScoreBoard
 
     public function showAllMatchesSummation(): void
     {
-        $gameNumber = 1;
-        foreach ($this->gameManager->getAllGames() as $game) {
-            echo sprintf('%s. %s', $gameNumber, $game);
-            $gameNumber++;
+        foreach ($this->gameManager->getAllGames() as $key => $game) {
+            echo sprintf('%s. %s', ++$key, $game);
         }
     }
 }
