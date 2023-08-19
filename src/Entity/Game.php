@@ -2,77 +2,78 @@
 
 namespace Mdabrowski\ScoreBoard\Entity;
 
-use DateInterval;
 use DateTime;
 
 class Game
 {
-    private string $uniqueHash;
     private string $homeTeamName;
     private string $awayTeamName;
     private int $homeTeamScore;
     private int $awayTeamScore;
     private DateTime $startTime;
     private ?DateTime $endTime = null;
-    private bool $isOver = false;
     public function __construct(
         string $homeTeamName,
-        string $awayTeamName
+        string $awayTeamName,
+        DateTime $startTime
     ) {
 
         $this->homeTeamName = $homeTeamName;
         $this->awayTeamName = $awayTeamName;
         $this->homeTeamScore = 0;
         $this->awayTeamScore = 0;
-        $this->startTime = new DateTime('NOW');
-        $this->generateUniqueHash();
+        $this->startTime = $startTime;
     }
 
     public function __toString(): string
     {
         return sprintf(
-            '%s\t%s : %s\t%s : %s\t%s',
-            $this->getShortenedUniqueHash(),
+            '%s %s - %s %s%s',
             $this->homeTeamName,
-            $this->awayTeamName,
             $this->homeTeamScore,
+            $this->awayTeamName,
             $this->awayTeamScore,
-            $this->getFormattedGameTime()
+            PHP_EOL
         );
     }
 
-    public function getUniqueHash(): string
+    public function endGame(DateTime $endTime): void
     {
-        return $this->uniqueHash;
+        $this->endTime = $endTime;
     }
 
-    public function getShortenedUniqueHash(): string
+    public function isGameOver(): bool
     {
-        return substr($this->uniqueHash, 0, 5);
+        return null !== $this->endTime;
     }
 
-    private function generateUniqueHash(): void {
-        $this->uniqueHash = md5(
-            sprintf(
-                '%s%s%s',
-                $this->homeTeamName,
-                $this->awayTeamName,
-                $this->startTime->format('Y-m-d H:i:s')
-            )
-        );
+    public function getHomeTeamName(): string
+    {
+        return $this->homeTeamName;
     }
 
-    private function getFormattedGameTime(): string
+    public function getAwayTeamName(): string
     {
-        if (null === $gameTime = $this->getGameTime()) {
-            return 'Still going';
-        }
-
-        return sprintf('%s:%s', $gameTime->h, $gameTime->i);
+        return $this->awayTeamName;
     }
 
-    private function getGameTime(): ?DateInterval
+    public function setAwayTeamScore(int $awayTeamScore): void
     {
-        return $this->endTime?->diff($this->startTime);
+        $this->awayTeamScore = $awayTeamScore;
+    }
+
+    public function getHomeTeamScore(): int
+    {
+        return $this->homeTeamScore;
+    }
+
+    public function setHomeTeamScore(int $homeTeamScore): void
+    {
+        $this->homeTeamScore = $homeTeamScore;
+    }
+
+    public function getAwayTeamScore(): int
+    {
+        return $this->awayTeamScore;
     }
 }

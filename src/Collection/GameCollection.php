@@ -3,40 +3,59 @@
 namespace Mdabrowski\ScoreBoard\Collection;
 
 use ArrayIterator;
-use Exception;
 use IteratorAggregate;
 use Mdabrowski\ScoreBoard\Entity\Game;
+use Mdabrowski\ScoreBoard\Exception\GameOverException;
 use Traversable;
 
 class GameCollection implements IteratorAggregate
 {
-    /** @var Game[]  */
-    private array $list = [];
+    /** @var Game[] */
+    private array $gameList = [];
 
     public function add(Game $game): void
     {
-        $this->list[] = $game;
+        $this->gameList[] = $game;
     }
 
     public function getIterator(): Traversable
     {
-        return new ArrayIterator($this->list);
+        return new ArrayIterator($this->gameList);
+    }
+
+    public function toArray(): array
+    {
+        return $this->gameList;
     }
 
     /**
-     * @throws Exception
+     * @throws GameOverException
      */
-    public function search(string $searchedHash): Game
+    public function getCurrentGame(): Game
     {
-        foreach ($this->list as $game) {
-            if (
-                $searchedHash === $game->getUniqueHash()
-                || $searchedHash === $game->getShortenedUniqueHash()
-            ) {
-                return $game;
-            }
+        $currentGame = $this->last();
+        if ($this->isCurrentGameNotActive($currentGame)) {
+            throw new GameOverException('There is no active game on scoreboard');
         }
 
-        throw new Exception('Game not found');
+        return $currentGame;
+    }
+
+    public function isLastGameStillGoing(): bool
+    {
+        return null !== $this->last() && !$this->last()->isGameOver();
+    }
+    public function last(): ?Game
+    {
+        if (empty($this->gameList)) {
+            return null;
+        }
+
+        return end($this->gameList);
+    }
+
+    private function isCurrentGameNotActive(?Game $currentGame): bool
+    {
+        return null === $currentGame || $currentGame->isGameOver();
     }
 }
