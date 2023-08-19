@@ -46,3 +46,25 @@ To see all games summation you can use method:
 Mdabrowski\ScoreBoard\ScoreBoard::showAllMatchesSummation
 ```
 method will print scores to command line.
+
+#### Usage example
+```php
+$scoreBoard->startGame(
+    'Niemcy',
+    'Francja'
+);
+
+$scoreBoard->updateScore(3, 4);
+$scoreBoard->endGame();
+
+$scoreBoard->startGame(
+    'Polska',
+    'Czechy'
+);
+
+$scoreBoard->updateScore(1, 2);
+$scoreBoard->updateScore(5, 2);
+$scoreBoard->endGame();
+
+$scoreBoard->showAllMatchesSummation();
+```
